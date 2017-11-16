@@ -2,11 +2,11 @@
 
 user: grader
 
-IP Address: 34.224.56.60
+IP Address: 34.199.16.1
 
 SSH Port: 2200
 
-Url: [34.224.56.60](34.224.56.60)
+Url: [34.199.16.1](http://34.199.16.1)
 
 ## Configuration Details
 
@@ -18,7 +18,7 @@ Url: [34.224.56.60](34.224.56.60)
 2. Login into server as root using the command:
 
 ```
-ssh root@34.224.56.60 -i ~/.ssh/insertprivatekey.pem
+ssh root@34.199.16.10 -i ~/.ssh/insertprivatekey.pem
 ```
 
 ### Update all existing software
