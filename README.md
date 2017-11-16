@@ -53,6 +53,9 @@ In the file add the following text and save with `CTRL + O` and exit with `Ctrl 
 ```
 grader ALL=(ALL:ALL) ALL
 ```
+### Configure localtime
+
+1. Configure the time using `sudo dpkg-reconfigure tzdata`
 
 ### Configure Key Based Authentication
 
@@ -129,6 +132,7 @@ sudo apt-get install git
 sudo apt-get install apache2
 sudo apt-get install libapache2-mod-wsgi
 sudo apt-get install postgresql
+sudo apt-get install python-pip
 sudo pip install sqlalchemy
 sudo pip install psycopg2
 sudo pip install httplib2
@@ -175,4 +179,80 @@ git clone https://github.com/arthurchan1111/catalog.git
 
 ```
 
-4. 
+4. Rename the project using:
+
+```
+sudo mv ./catalog ./FlaskApp
+```
+
+5. Move into the project directory and rename using the following command
+
+```
+sudo mv application.py __init__.py
+```
+
+6. Using the `sudo nano` command change the following line in `__init__.py`and `database_setup.py` from:
+
+```
+engine = create_engine('postgresql:///catalog')
+```
+
+To:
+
+```
+engine = create_engine('postgresql://catalog:password@localhost/catalog')
+```
+
+7. Create the database schema with:
+
+```
+sudo python database_setup.py
+```
+
+### Configure Hosting
+
+1. Use the command `sudo nano /etc/apache2/sites-available/FlaskApp.conf` and copy the contents below:
+
+```
+<VirtualHost *:80>
+        ServerName 34.199.16.1
+        ServerAdmin arthurchan1111@gmail.com
+        WSGIScriptAlias / /var/www/FlaskApp/flaskapp.wsgi
+        <Directory /var/www/FlaskApp/FlaskApp/>
+                Order allow,deny
+                Allow from all
+        </Directory>
+        Alias /static /var/www/FlaskApp/FlaskApp/static
+        <Directory /var/www/FlaskApp/FlaskApp/static/>
+                Order allow,deny
+                Allow from all
+        </Directory>
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        LogLevel warn
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+Save the file then exit.
+
+2. Use the command `sudo nano /var/www/FlaskApp/flaskapp.wsgi` and copy the contents below:
+
+```
+#!/usr/bin/env python
+
+import sys
+import logging
+logging.basicConfig(stream=sys.stderr)
+
+sys.path.insert(0, '/var/www/FlaskApp/')
+
+from FlaskApp import app as application
+application.secret_key= 'super_secret_key'
+```
+
+Save the file then exit.
+
+3. Restart the service with `sudo service apache2 restart`
+
+### References
+
+https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps#step-five-%E2%80%93-create-the-wsgi-file
