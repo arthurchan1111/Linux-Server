@@ -1,5 +1,10 @@
 # Linux Server Configuration
 
+This project involves setting up a base Linux server to host web apps and protects against
+malicious users.
+
+## Details
+
 user: grader
 
 IP Address: 34.199.16.1
